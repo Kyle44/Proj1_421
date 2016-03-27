@@ -1,0 +1,4 @@
+all:
+        gcc -Wall test1.c -o test1
+clean:
+        rm -rf *# *~ test1.out test1
