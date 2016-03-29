@@ -6,6 +6,7 @@
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/list.h>
+#include <include/asm/spinlock.h>
 
 static int numMailboxes = 0;
 
@@ -186,17 +187,17 @@ asmlinkage long recv_msg_421(unsigned long id, unsigned char *msg, unsigned long
 	}
 	struct mbox *currMbox = Mboxes[i];
 
+	msg = encrypt(msg, n, key); // decrypt it w/ encrpyt (works the same w/ xor)
+
 	msg = currMbox->messages[0]; // first message
 
-	msg = decrypt(msg, n, key); // decrypt it
-
-//	currNumMessages = currMbox->numMessages; // the mbox's current number of messages
 	bringMessagesUp(currMbox); // make all subsequent messages go up one
 
-	currMbox->numMessages -=1; // increment numMessages
+	currMbox->numMessages -=1; // decrements numMessages
 
+	len = len(msg)
 
-	return -EINVAL;
+	return n;
 }
 
 // DONE! finds the id then returns numMessages for that mailbox
